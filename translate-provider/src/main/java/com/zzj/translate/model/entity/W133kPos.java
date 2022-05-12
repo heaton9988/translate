@@ -6,15 +6,15 @@ import lombok.ToString;
 
 import java.io.Serializable;
 
-@TableName("w133k_means")
+@TableName("w133k_pos")
 @Data
 @ToString
-public class W133kMeans implements Serializable {
+public class W133kPos implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private Integer wordId;
+    private Integer id;
 
-    private Integer posId;
+    private String name;
 
     private String means;
 }

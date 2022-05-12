@@ -3,7 +3,11 @@ import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.zzj.translate.Application;
 import com.zzj.translate.model.entity.W133kMeans;
+import com.zzj.translate.model.entity.W133kPos;
+import com.zzj.translate.model.entity.W133kWords;
 import com.zzj.translate.model.service.IW133kMeansService;
+import com.zzj.translate.model.service.IW133kPosService;
+import com.zzj.translate.model.service.IW133kWordsService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,16 +21,7 @@ import java.util.List;
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class GeneratorTest {
-    @Autowired
-    IW133kMeansService meansService;
-
-    @Test
-    public void a() {
-        List<W133kMeans> list = meansService.list();
-        System.out.println();
-    }
-
+public class MyBatisPlusGeneratorTest {
     @Test
     public void generate() {
         FastAutoGenerator.create("jdbc:mysql://localhost:3306/bbc_dict", "root", "123456")

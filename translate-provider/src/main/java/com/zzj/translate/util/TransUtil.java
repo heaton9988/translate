@@ -1,3 +1,5 @@
+package com.zzj.translate.util;
+
 import com.zzj.translate.baidu.api.document.TransApi;
 import com.google.gson.Gson;
 import org.apache.commons.collections4.CollectionUtils;
