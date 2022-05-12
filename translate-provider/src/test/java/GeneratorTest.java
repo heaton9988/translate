@@ -2,8 +2,8 @@ import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.zzj.translate.Application;
-import com.zzj.translate.model.entity.Means;
-import com.zzj.translate.model.service.MeansService;
+import com.zzj.translate.model.entity.W133kMeans;
+import com.zzj.translate.model.service.IW133kMeansService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,11 +19,11 @@ import java.util.List;
 @SpringBootTest(classes = Application.class)
 public class GeneratorTest {
     @Autowired
-    MeansService meansService;
+    IW133kMeansService meansService;
 
     @Test
     public void a() {
-        List<Means> list = meansService.list();
+        List<W133kMeans> list = meansService.list();
         System.out.println();
     }
 
@@ -42,7 +42,8 @@ public class GeneratorTest {
                             .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "/Users/xingchuan/gitCode/translate/translate-provider/src/main/resources/com/zzj/translate/model/mapper"));
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("means") // 设置需要生成的表名
+//                    builder.addInclude("w133k_means", "w133k_pos", "w133k_missing", "w133k_words")
+                    builder.addInclude("w133k_pos")
 //                            .addTablePrefix("t_", "c_")
                     ; // 设置过滤表前缀
                 })
