@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +50,7 @@ public class ExcelAddTransTest {
         List<List<String>> wordsList = Lists.newArrayList();
         HashSet<String> allWords = Sets.newHashSet();
         for (List<Object> row : rowsRead) {
-            List<String> words = row.stream().map(k -> k.toString()).collect(Collectors.toList());
+            List<String> words = row.stream().map(k -> k.toString().trim()).collect(Collectors.toList());
             wordsList.add(words);
             allWords.addAll(words);
         }
@@ -61,34 +63,41 @@ public class ExcelAddTransTest {
 
         List<List<String>> rows = Lists.newArrayList();
         wordsList.forEach((words) -> {
-            for (int i = 0; i < words.size(); i++) {
-                String word = words.get(i);
+            for (int colIdex = 0; colIdex < words.size(); colIdex++) {
+                List<String> row = Lists.newArrayList();
 
+                String word = words.get(colIdex);
                 Stardict stardict = word2stardict.get(word);
                 W133kTrans w133kTrans = word2w133kTrans.get(word);
 
                 String phonetic = stardict.getPhonetic();
 
                 String transStar = stardict.getTranslation();
-                String transW133 = w133kTrans.getMean();
+                String transW133 = w133kTrans == null ? "" : w133kTrans.getMean();
                 String trans = StringUtils.isBlank(transW133) ? transStar : transW133;
 
                 String exchangeStar = stardict.getExchange();
-                String exchangeW133 = w133kTrans.getExchange();
+                String exchangeW133 = w133kTrans == null ? "" : w133kTrans.getExchange();
                 String exchange = StringUtils.isBlank(exchangeW133) ? exchangeStar : exchangeW133;
 
-                System.out.println();
-            }
+                row.add(word);
+                row.add(phonetic);
+                row.add(trans + "\n" + exchange);
 
+                rows.add(row);
+            }
+            rows.add(Lists.newArrayList());
         });
 
         Workbook workbook = createWorkbook();
         Sheet day01 = workbook.createSheet("day01");
 
-        setCellValue(day01, 1, 1, "a");
-        setCellValue(day01, 1, 2, "b");
-        setCellValue(day01, 2, 1, "c");
-        setCellValue(day01, 2, 2, "d");
+        for (int i = 0; i < rows.size(); i++) {
+            List<String> row = rows.get(i);
+            for (int j = 0; j < row.size(); j++) {
+                setCellValue(day01, i + 1, j + 1, row.get(j));
+            }
+        }
 
         FileOutputStream fileOutputStream = new FileOutputStream("/Users/xingchuan/Desktop/Conquer80.xlsx");
         workbook.write(fileOutputStream);
