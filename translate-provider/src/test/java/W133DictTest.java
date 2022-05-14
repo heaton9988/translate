@@ -1,11 +1,14 @@
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.zzj.translate.Application;
 import com.zzj.translate.model.entity.W133kMeans;
 import com.zzj.translate.model.entity.W133kPos;
+import com.zzj.translate.model.entity.W133kTrans;
 import com.zzj.translate.model.entity.W133kWords;
 import com.zzj.translate.model.service.IW133kMeansService;
 import com.zzj.translate.model.service.IW133kPosService;
+import com.zzj.translate.model.service.IW133kTransService;
 import com.zzj.translate.model.service.IW133kWordsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -30,52 +33,50 @@ public class W133DictTest {
     IW133kWordsService wordsService;
     @Autowired
     IW133kPosService posService;
+    @Autowired
+    IW133kTransService transService;
 
-    private Gson gson = new Gson();
+    private static Gson gson = new Gson();
 
     @Test
     public void readDictTables() {
         Map<Integer, String> wordId2fullMean = getWordId2fullMean();
 
-        Map<String, String> type2name = Maps.newHashMap();
-        type2name.put("word_ing", "进行时");
-        type2name.put("word_third", "第三人称");
-        type2name.put("word_pl", "第三人称");
-        type2name.put("word_done", "完成时");
-        type2name.put("word_past", "过去时");
-        type2name.put("word_er", "比较级");
-        type2name.put("word_est", "最高级");
-
-        Map<String, String> wordName2trans = Maps.newTreeMap();
+        List<W133kTrans> transList = Lists.newArrayList();
         List<W133kWords> wordsList = wordsService.list();
         for (W133kWords word : wordsList) {
             Integer wordId = word.getId();
-            String fullMean = wordId2fullMean.get(wordId);
-            if (StringUtils.isBlank(fullMean)) continue;
-            StringBuilder trans = new StringBuilder(fullMean);
-
             String wordName = word.getWord();
             String exchange = word.getExchange();
-            if (StringUtils.isBlank(exchange)) continue;
 
-            trans.append("\n");
-            Map<String, Object> exchangeMap = gson.fromJson(exchange, Map.class);
-            for (Map.Entry<String, Object> entry : exchangeMap.entrySet()) {
-                String type = entry.getKey();
-                Object wordList = entry.getValue();
-                if (wordList == null || StringUtils.isBlank(wordList.toString())) continue;
+            W133kTrans transEntity = new W133kTrans();
+            transList.add(transEntity);
 
-//                String typeName = type2name.get(type);
-                String typeName = type.replaceAll("word_", "");
-                trans.append(typeName).append(":").append(wordList).append(", ");
-                if (!(wordList instanceof String) && StringUtils.isBlank(typeName)) {
-//                    System.out.println();
-                }
+            transEntity.setId(wordId);
+            transEntity.setWord(wordName);
+            transEntity.setVoice(word.getVoice());
+            transEntity.setTimes(word.getTimes());
+
+            String fullMean = wordId2fullMean.get(wordId);
+            if (StringUtils.isNotBlank(fullMean)) {
+                transEntity.setMean(fullMean);
             }
 
-            wordName2trans.put(wordName, trans.toString());
+            if (StringUtils.isNotBlank(exchange)) {
+                StringBuilder exchangeSB = new StringBuilder();
+                Map<String, Object> exchangeMap = gson.fromJson(exchange, Map.class);
+                for (Map.Entry<String, Object> entry : exchangeMap.entrySet()) {
+                    String type = entry.getKey();
+                    Object wordList = entry.getValue();
+                    if (wordList == null || StringUtils.isBlank(wordList.toString())) continue;
+
+                    String typeName = type.replaceAll("word_", "");
+                    exchangeSB.append(typeName).append(":").append(wordList).append(", ");
+                }
+                transEntity.setExchange(exchangeSB.toString());
+            }
         }
-        System.out.println();
+        transService.saveBatch(transList, 500);
     }
 
     private Map<Integer, String> getWordId2fullMean() {
@@ -139,3 +140,13 @@ public class W133DictTest {
         return posList.stream().filter(k -> StringUtils.isNotBlank(k.getName())).collect(Collectors.toMap(k -> k.getId(), k -> k));
     }
 }
+
+
+//    Map<String, String> type2name = Maps.newHashMap();
+//        type2name.put("word_ing", "进行时");
+//                type2name.put("word_third", "第三人称");
+//                type2name.put("word_pl", "第三人称");
+//                type2name.put("word_done", "完成时");
+//                type2name.put("word_past", "过去时");
+//                type2name.put("word_er", "比较级");
+//                type2name.put("word_est", "最高级");

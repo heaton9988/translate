@@ -38,7 +38,7 @@ public class MyBatisPlusGeneratorTest {
                 })
                 .strategyConfig(builder -> {
 //                    builder.addInclude("w133k_means", "w133k_pos", "w133k_missing", "w133k_words")
-                    builder.addInclude("w133k_pos")
+                    builder.addInclude("stardict")
 //                            .addTablePrefix("t_", "c_")
                     ; // 设置过滤表前缀
                 })
