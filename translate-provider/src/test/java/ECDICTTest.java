@@ -26,8 +26,6 @@ public class ECDICTTest {
     @Autowired
     IStardictService stardictService;
 
-    private static Gson gson = new Gson();
-
     @Test
     public void importStarDict() throws Exception {
         CsvReader reader = CsvUtil.getReader();

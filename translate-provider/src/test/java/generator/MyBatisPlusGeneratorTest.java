@@ -40,7 +40,7 @@ public class MyBatisPlusGeneratorTest {
                 })
                 .strategyConfig(builder -> {
 //                    builder.addInclude("w133k_means", "w133k_pos", "w133k_missing", "w133k_words")
-                    builder.addInclude("stardict")
+                    builder.addInclude("etyma_affix_3k")
 //                            .addTablePrefix("t_", "c_")
                     ; // 设置过滤表前缀
                 })

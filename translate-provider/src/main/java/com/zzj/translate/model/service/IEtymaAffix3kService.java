@@ -1,6 +1,6 @@
 package com.zzj.translate.model.service;
 
-import com.zzj.translate.model.entity.W133kMissing;
+import com.zzj.translate.model.entity.EtymaAffix3k;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author zhouzhijun
- * @since 2022-05-12
+ * @since 2022-05-15
  */
-public interface IW133kMissingService extends IService<W133kMissing> {
+public interface IEtymaAffix3kService extends IService<EtymaAffix3k> {
 
 }

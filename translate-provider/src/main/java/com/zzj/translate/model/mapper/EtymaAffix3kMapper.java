@@ -1,6 +1,6 @@
 package com.zzj.translate.model.mapper;
 
-import com.zzj.translate.model.entity.W133kMissing;
+import com.zzj.translate.model.entity.EtymaAffix3k;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author zhouzhijun
- * @since 2022-05-12
+ * @since 2022-05-15
  */
-public interface W133kMissingMapper extends BaseMapper<W133kMissing> {
+public interface EtymaAffix3kMapper extends BaseMapper<EtymaAffix3k> {
 
 }
